@@ -52,12 +52,13 @@ export default function StockChart({ data, prediction, stockSymbol }: StockChart
         {
           label: "Historical Prices",
           data: data.prices,
-          borderColor: "rgb(59, 130, 246)",
-          backgroundColor: "rgba(59, 130, 246, 0.1)",
+          borderColor: "rgb(236, 72, 153)", // Pink
+          backgroundColor: "rgba(236, 72, 153, 0.1)",
           fill: true,
           tension: 0.4,
-          pointRadius: 3,
-          pointHoverRadius: 6,
+          pointRadius: 4,
+          pointHoverRadius: 8,
+          borderWidth: 3,
         },
       ]
 
@@ -74,9 +75,10 @@ export default function StockChart({ data, prediction, stockSymbol }: StockChart
           backgroundColor: prediction.trend === "up" ? "rgba(34, 197, 94, 0.1)" : "rgba(239, 68, 68, 0.1)",
           fill: false,
           tension: 0.4,
-          pointRadius: 5,
-          pointHoverRadius: 8,
-          borderDash: [5, 5],
+          pointRadius: 6,
+          pointHoverRadius: 10,
+          borderDash: [8, 8],
+          borderWidth: 3,
         })
       }
 
@@ -95,18 +97,27 @@ export default function StockChart({ data, prediction, stockSymbol }: StockChart
           },
           plugins: {
             title: {
-              display: true,
-              text: `${data.name} - Price History & Prediction`,
-              font: {
-                size: 16,
-                weight: "bold",
-              },
+              display: false, // We'll handle this in the component
             },
             legend: {
               display: true,
               position: "top",
+              labels: {
+                color: "white",
+                font: {
+                  size: 12,
+                  weight: "bold"
+                },
+                usePointStyle: true,
+                pointStyle: "circle"
+              }
             },
             tooltip: {
+              backgroundColor: "rgba(0, 0, 0, 0.8)",
+              titleColor: "white",
+              bodyColor: "white",
+              borderColor: "rgba(255, 255, 255, 0.2)",
+              borderWidth: 1,
               callbacks: {
                 label: (context: any) => `${context.dataset.label}: $${context.parsed.y.toFixed(2)}`,
               },
@@ -118,23 +129,43 @@ export default function StockChart({ data, prediction, stockSymbol }: StockChart
               title: {
                 display: true,
                 text: "Date",
+                color: "white",
+                font: {
+                  size: 14,
+                  weight: "bold"
+                }
               },
               grid: {
                 display: true,
-                color: "rgba(0, 0, 0, 0.1)",
+                color: "rgba(255, 255, 255, 0.1)",
               },
+              ticks: {
+                color: "rgba(255, 255, 255, 0.8)",
+                font: {
+                  size: 12
+                }
+              }
             },
             y: {
               display: true,
               title: {
                 display: true,
                 text: "Price ($)",
+                color: "white",
+                font: {
+                  size: 14,
+                  weight: "bold"
+                }
               },
               grid: {
                 display: true,
-                color: "rgba(0, 0, 0, 0.1)",
+                color: "rgba(255, 255, 255, 0.1)",
               },
               ticks: {
+                color: "rgba(255, 255, 255, 0.8)",
+                font: {
+                  size: 12
+                },
                 callback: (value: any) => "$" + value.toFixed(2),
               },
             },
@@ -142,7 +173,8 @@ export default function StockChart({ data, prediction, stockSymbol }: StockChart
           elements: {
             point: {
               hoverBackgroundColor: "white",
-              hoverBorderWidth: 2,
+              hoverBorderWidth: 3,
+              hoverBorderColor: "rgba(236, 72, 153, 1)",
             },
           },
         },
@@ -157,31 +189,24 @@ export default function StockChart({ data, prediction, stockSymbol }: StockChart
   }, [data, prediction])
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <BarChart3 className="h-5 w-5" />
-          Price Chart & Prediction Visualization
-        </CardTitle>
-        <CardDescription>Historical price data with neural network prediction overlay</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="h-96 w-full">
-          <canvas ref={chartRef} />
+    <div className="w-full">
+      <div className="h-96 w-full">
+        <canvas ref={chartRef} />
+      </div>
+      <div className="mt-6 flex flex-wrap gap-6 text-sm justify-center">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 bg-pink-500 rounded-full shadow-lg"></div>
+          <span className="text-white font-medium">Historical Data ({data.prices.length} points)</span>
         </div>
-        <div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-600">
+        {prediction && (
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-blue-500 rounded"></div>
-            <span>Historical Data ({data.prices.length} points)</span>
+            <div className={`w-4 h-4 rounded-full shadow-lg ${prediction.trend === "up" ? "bg-green-500" : "bg-red-500"}`}></div>
+            <span className="text-white font-medium">
+              AI Prediction (Confidence: {(prediction.confidence * 100).toFixed(1)}%)
+            </span>
           </div>
-          {prediction && (
-            <div className="flex items-center gap-2">
-              <div className={`w-3 h-3 rounded ${prediction.trend === "up" ? "bg-green-500" : "bg-red-500"}`}></div>
-              <span>AI Prediction (Confidence: {(prediction.confidence * 100).toFixed(1)}%)</span>
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+        )}
+      </div>
+    </div>
   )
 }

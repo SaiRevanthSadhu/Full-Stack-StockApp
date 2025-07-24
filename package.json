@@ -6,6 +6,8 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
+    "format": "prettier --write .",
+    "type-check": "tsc --noEmit",
     "start": "next start"
   },
   "dependencies": {
@@ -38,6 +40,7 @@
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
     "autoprefixer": "^10.4.20",
+    "bcryptjs": "^3.0.2",
     "brain.js": "latest",
     "chart.js": "latest",
     "class-variance-authority": "^0.7.1",
@@ -48,7 +51,9 @@
     "gpu.js": "latest",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
-    "next": "14.2.16",
+    "mongodb": "^6.17.0",
+    "next": "^14.2.30",
+    "next-auth": "^4.24.11",
     "next-themes": "^0.4.4",
     "react": "^18",
     "react-day-picker": "8.10.1",
@@ -63,10 +68,17 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/mongodb": "^4.0.6",
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^9.31.0",
+    "eslint-config-next": "^15.4.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.3",
     "postcss": "^8.5",
+    "prettier": "^3.6.2",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
   }
